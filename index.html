@@ -1,152 +1,207 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Samsung Style Calculator</title>
+  <title>Samsung Style Calculator - Mobile Optimized</title>
   <style>
+    * {
+      box-sizing: border-box;
+      user-select: none; /* prevents accidental text selection on double-tap */
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f6f6f6;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: #f0f0f0;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
+      justify-content: center;
+      min-height: 100vh;
     }
 
     .calculator {
       width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      box-sizing: border-box;
+      max-width: 500px;   /* comfortable on tablets, still full on phones */
+      margin: 16px;
       background-color: #fff;
+      border-radius: 32px;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
     }
 
     .display {
-      font-size: 2.5rem;
+      font-size: 3rem;
       text-align: right;
-      margin-top: 30px;
+      padding: 20px 15px;
       margin-bottom: 20px;
-      padding: 0 10px;
-      height: 60px;
-      overflow-x: auto;
-      color: #000;
-      background-color: transparent;
+      background-color: #fafafa;
       border: none;
+      border-radius: 28px;
+      color: #000;
+      font-weight: 500;
+      letter-spacing: 1px;
+      overflow-x: auto;
+      white-space: nowrap;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
     }
 
     .buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      flex-grow: 1;
-      padding-bottom: 10px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     button {
-      width: 100%;
-      aspect-ratio: 1/1;
-      border: none;
-      border-radius: 50%;
-      font-size: 1.5rem;
       background-color: #fff;
-      color: #000;
-    }
-
-    button.operator {
-      background-color: #aaa;
-      color: white;
-    }
-
-    button.green {
-      background-color: #4CAF50;
-      color: white;
-      border-radius: 30px;
-      grid-column: span 4;
-      width: 100%;
-      aspect-ratio: auto;
-      height: 60px;
+      border: none;
+      border-radius: 60px;
       font-size: 1.8rem;
-      margin-top: 10px;
+      font-weight: 500;
+      padding: 18px 0;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      color: #111;
+      touch-action: manipulation;
     }
 
     button:active {
-      background-color: #ddd;
+      background-color: #e0e0e0;
+      transform: scale(0.96);
+    }
+
+    button.operator {
+      background-color: #e9e9ef;
+      color: #007aff;
+      font-weight: 600;
+    }
+
+    /* Special styling for C, ±, ⌫ etc */
+    button.func {
+      background-color: #e0e0e5;
+      color: #d32f2f;
+    }
+
+    .green {
+      background-color: #34c759;
+      color: white;
+      font-size: 2rem;
+      font-weight: 600;
+      width: 100%;
+      border-radius: 60px;
+      padding: 18px;
+      margin-top: 4px;
+      box-shadow: none;
+    }
+
+    .green:active {
+      background-color: #28a745;
+      transform: scale(0.97);
+    }
+
+    /* make sure zero button is normal */
+    button[onclick*="append('0')"] {
+      /* normal style */
+    }
+
+    /* responsive touch adjustments */
+    @media (max-width: 480px) {
+      .calculator {
+        margin: 12px;
+        padding: 16px;
+      }
+      .display {
+        font-size: 2.5rem;
+        padding: 16px 12px;
+      }
+      button {
+        font-size: 1.6rem;
+        padding: 14px 0;
+      }
+      .green {
+        font-size: 1.8rem;
+        padding: 14px;
+      }
+      .buttons {
+        gap: 10px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="calculator">
-    <input type="text" id="display" class="display" readonly />
+<div class="calculator">
+  <input type="text" id="display" class="display" readonly inputmode="none" />
 
-    <div class="buttons">
-      <button onclick="clearDisplay()">C</button>
-      <button onclick="append('(')">(</button>
-      <button onclick="append(')')">)</button>
-      <button onclick="append('/')" class="operator">÷</button>
+  <div class="buttons">
+    <button class="func" onclick="clearDisplay()">C</button>
+    <button onclick="append('(')">(</button>
+    <button onclick="append(')')">)</button>
+    <button onclick="append('/')" class="operator">÷</button>
 
-      <button onclick="append('7')">7</button>
-      <button onclick="append('8')">8</button>
-      <button onclick="append('9')">9</button>
-      <button onclick="append('*')" class="operator">×</button>
+    <button onclick="append('7')">7</button>
+    <button onclick="append('8')">8</button>
+    <button onclick="append('9')">9</button>
+    <button onclick="append('*')" class="operator">×</button>
 
-      <button onclick="append('4')">4</button>
-      <button onclick="append('5')">5</button>
-      <button onclick="append('6')">6</button>
-      <button onclick="append('-')" class="operator">−</button>
+    <button onclick="append('4')">4</button>
+    <button onclick="append('5')">5</button>
+    <button onclick="append('6')">6</button>
+    <button onclick="append('-')" class="operator">−</button>
 
-      <button onclick="append('1')">1</button>
-      <button onclick="append('2')">2</button>
-      <button onclick="append('3')">3</button>
-      <button onclick="append('+')" class="operator">+</button>
+    <button onclick="append('1')">1</button>
+    <button onclick="append('2')">2</button>
+    <button onclick="append('3')">3</button>
+    <button onclick="append('+')" class="operator">+</button>
 
-      <button onclick="toggleSign()">±</button>
-      <button onclick="append('0')">0</button>
-      <button onclick="append('.')">.</button>
-      <button onclick="backspace()">⌫</button>
-    </div>
-
-    <button onclick="calculate()" class="green">=</button>
+    <button class="func" onclick="toggleSign()">±</button>
+    <button onclick="append('0')">0</button>
+    <button onclick="append('.')">.</button>
+    <button class="func" onclick="backspace()">⌫</button>
   </div>
 
-  <script>
-    const display = document.getElementById("display");
+  <button onclick="calculate()" class="green">=</button>
+</div>
 
-    function append(val) {
-      display.value += val;
-    }
+<script>
+  const display = document.getElementById("display");
 
-    function clearDisplay() {
-      display.value = '';
-    }
+  function append(val) {
+    display.value += val;
+  }
 
-    function backspace() {
-      display.value = display.value.slice(0, -1);
-    }
+  function clearDisplay() {
+    display.value = '';
+  }
 
-    function toggleSign() {
-      if (display.value.startsWith('-')) {
-        display.value = display.value.substring(1);
-      } else {
-        display.value = '-' + display.value;
-      }
-    }
+  function backspace() {
+    display.value = display.value.slice(0, -1);
+  }
 
-    function calculate() {
-      try {
-        display.value = eval(display.value);
-      } catch {
-        display.value = "Error";
-      }
+  function toggleSign() {
+    if (display.value.startsWith('-')) {
+      display.value = display.value.substring(1);
+    } else {
+      display.value = '-' + display.value;
     }
-  </script>
+  }
+
+  function calculate() {
+    try {
+      // replace visual operators for eval
+      let expr = display.value;
+      let result = eval(expr);
+      // avoid showing too many decimals
+      display.value = Number.isFinite(result) ? parseFloat(result.toFixed(10)).toString() : result;
+    } catch {
+      display.value = "Error";
+    }
+  }
+</script>
 </body>
 </html>
